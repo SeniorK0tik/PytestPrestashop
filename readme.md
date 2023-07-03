@@ -1,9 +1,10 @@
-#Тестирование UI Prestashop.
-##Требования:
+
+Тестирование UI Prestashop.
+Требования:
 - docker
 - docker compose
 
-##Порядок выполнения:
+Порядок выполнения:
 1. Скачай необходимые образы браузеров выполнив скрипт `pull_browsers.sh` из директории `/utils/scrips/`
 2. Измени название файла `.env-selenoid` на `.env`
 3. Запуск docker-compose `docker-compose up -d`
@@ -15,9 +16,9 @@
    3. По успешному окончанию скрипта получаем ссылку в консоле `ALLURE REPORT URL`
 5. Готово
 
-##Примечание
+Примечание
 Проэкт частично покрыт тестами.
 Основная задача была сделать работоспособный фреймворк с использованием Page Factory + Page Objects.
 
-##Project Status:
+Project Status:
 - Work in Progress
