@@ -1,5 +1,6 @@
 
-Тестирование UI Prestashop.
+Тестирование UI Prestashop
+
 Требования:
 - docker
 - docker compose
