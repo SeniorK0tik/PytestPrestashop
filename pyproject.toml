@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "prestaprofileproject"
+version = "0.1.0"
+description = ""
+authors = ["SeniorK0tik <ndrus24@bk.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pytest = "^7.3.2"
+selenium = "^4.10.0"
+environs = "^9.5.0"
+pydantic = {extras = ["email"], version = "^1.10.9"}
+faker = "^18.10.1"
+allure-pytest = "^2.13.2"
+pytest-xdist = "^3.3.1"
+loguru = "^0.7.0"
+webdriver-manager = "^3.8.6"
+selenium-wire = "^5.1.0"
+pymysql = "^1.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks.start_tests]
+help = "Start basic test"
+cmd = "pytest -s -v -n auto --alluredir tests/allure_server/allure_results"
+
+
+[tool.poe.tasks.allure_results]
+help = "Send results to allure server"
+script = "utils.scripts.send_results:send_to_allure"
+
+[tool.poe.tasks.allure_results_docker]
+help = "Docker command to send results to allure docker server"
+cmd = "docker run --rm python-kotik poetry poe /tests/allure-server/allure_results"

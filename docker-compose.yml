@@ -1,0 +1,84 @@
+version: "3"
+services:
+  pytest:
+    image: python-kotik
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    network_mode: bridge
+    command: poetry poe start_tests
+    depends_on:
+      - prestashop
+      - selenoid
+  prestashop:
+    image: prestashop/prestashop:1.7
+    environment:
+      - DB_SERVER=db
+      - DB_NAME=prestashop
+      - DB_USER=prestashop
+      - DB_PASSWD=prestashop
+      - PS_DEV_MODE=1
+      - PS_DEMO_MODE=1
+      - PS_INSTALL_AUTO=1
+      - PS_DOMAIN=172.17.0.1:8080
+      - PS_FOLDER_ADMIN=admin
+      - ADMIN_MAIL=demo@prestashop.com
+      - ADMIN_PASSWD=prestashop_demo
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    network_mode: bridge
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1"
+      retries: 5
+
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=prestashop
+      - MYSQL_USER=prestashop
+      - MYSQL_PASSWORD=prestashop
+    ports:
+      - 3306:3306
+    network_mode: bridge
+
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./utils/selenoid/config/:/etc/selenoid/
+      - ./utils/selenoid/output/:/opt/selenoid/video/
+    ports:
+      - "4444:4444"
+    network_mode: bridge
+    command: [ "-conf", "/etc/selenoid/browsers.json" ]
+
+  selenoid-ui:
+    image: aerokube/selenoid-ui
+    restart: always
+    links:
+      - selenoid
+    ports:
+      - "8081:8080"
+    network_mode: bridge
+    command: [ "--selenoid-uri", "http://selenoid:4444" ]
+
+  allure:
+    image: "frankescobar/allure-docker-service"
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: 1
+      KEEP_HISTORY: 1
+    ports:
+      - "5050:5050"
+    user: root
+    network_mode: bridge
+    volumes:
+      -  /tests/allure-server/allure_results:/app/allure-results
+      - /tests/allure-server/allure_reports:/app/default-reports

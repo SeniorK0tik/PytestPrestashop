@@ -1,0 +1,67 @@
+# Не удалось сменить доменное имя -> Нет доступа изнутри докера. Происходит redirect на localhost:80
+version: '2'
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_prestashop
+      - MARIADB_DATABASE=bitnami_prestashop
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    ports:
+      - '3306:3306'
+    network_mode: bridge
+
+  prestashop:
+    image: docker.io/bitnami/prestashop:8
+    ports:
+      - '80:8080'
+      - '443:8443'
+    links:
+      - mariadb
+    user: root
+    environment:
+      - PRESTASHOP_HOST=localhost:80
+      - PRESTASHOP_DATABASE_HOST=mariadb
+      - PRESTASHOP_DATABASE_PORT_NUMBER=3306
+      - PRESTASHOP_DATABASE_USER=bn_prestashop
+      - PRESTASHOP_DATABASE_NAME=bitnami_prestashop
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'prestashop_data:/bitnami/prestashop'
+    depends_on:
+      - mariadb
+    network_mode: bridge
+#    networks:
+#      - prestashop-network
+
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./utils/selenoid/config/:/etc/selenoid/
+      - ./utils/selenoid/output/:/opt/selenoid/video/
+    ports:
+      - "4444:4444"
+    network_mode: bridge
+    command: ["-conf", "/etc/selenoid/browsers.json"]
+
+  selenoid-ui:
+    image: aerokube/selenoid-ui
+    restart: always
+    links:
+      - selenoid
+    ports:
+      - "8080:8080"
+    network_mode: bridge
+    command: ["--selenoid-uri", "http://selenoid:4444"]
+
+volumes:
+  mariadb_data:
+    driver: local
+  prestashop_data:
+    driver: local
+
