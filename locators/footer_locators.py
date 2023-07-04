@@ -1,4 +1,3 @@
-from locators.base import Locator
 from models.webdriver.driver.page import Page
 from page_factory.area import Area
 from page_factory.button import Button
@@ -7,24 +6,9 @@ from page_factory.input import Input
 from page_factory.link import Link
 
 
-class fff(Locator):
-    footer = {"css": "#footer"}
-    newsletter_block = {"css": footer['css'] + " .block_newsletter"}
-    newsletter_label = {"css": newsletter_block["css"] + " #block-newsletter-label"}
-    email_input = {"css": newsletter_block["css"] + " input[name='email']"}
-    subscribe_btn = {"css": newsletter_block["css"] + " .btn[value='Subscribe']"}
-
-    footer_container = {"css": footer['css'] + " .footer-container"}
-    # footer_sub_menu = {"css": footer_container['css': " ul[id*='footer_sub_menu']"]}
-
-    block_myaccount_infos = {"css": footer_container['css'] + " #block_myaccount_infos"}
-
-    block_contact = {"css":  footer_container['css'] + " div[class*='block-contact']"}
-
 class FooterLocators:
     def __init__(self, page: Page):
         self._page = page
-
 
         self.footer_container = Area(
             page,
@@ -67,8 +51,6 @@ class FooterLocators:
             locator=".account-list a",
             name="Account Links"
         )
-
-
 
         self.contact_infos = Area(
             page,

@@ -1,22 +1,9 @@
-from locators.base import Locator
 from models.webdriver.driver.page import Page
 from page_factory.area import Area
 from page_factory.dropdown import DropDown
 from page_factory.grid import Grid
 from page_factory.input import Input
 from page_factory.link import Link
-from page_factory.text import Text
-from page_factory.textarea import Textarea
-
-
-class HeaderLocatorss(Locator):
-    header = {"css": "#header"}
-    contact_link = {"css": header["css"] + " a[href*='contact-us']"}
-    logo_link = {"css": header["css"] + " .logo"}
-    categories_area = {"css": header["css"] + " .menu .top-menu[id='top-menu']"}
-    categories = {"css": categories_area["css"] + " li[class='category']"}
-    dropdown_menu_items = {"css": categories["css"] + " a[class='dropdown-item']"}
-    dropdown_submenu_items = {"css": categories["css"] + " a[class*='dropdown-submenu']"}
 
 
 class HeaderLocators:
@@ -136,9 +123,3 @@ class HeaderLocators:
             locator="#category-7>a",
             name="Home accessories category"
         )
-
-
-
-
-
-

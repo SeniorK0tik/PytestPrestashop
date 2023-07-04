@@ -5,6 +5,7 @@ from pydantic import BaseModel, BaseSettings, Field, AnyHttpUrl, EmailStr
 
 from configuration.structions import root_dir
 from models.webdriver.factory.browser import Browser
+from utils.logger_loguru.logger import logger
 
 
 class MyBaseSettings(BaseSettings):
@@ -118,4 +119,4 @@ def get_ui_config() -> UIConfig:
 
 if __name__ == '__main__':
     conf = UIConfig()
-    print(conf.allure.results_path)
+    print(conf.presta.d_u_email)

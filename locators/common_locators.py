@@ -20,6 +20,7 @@ class PopupsLocators:
             name="Success indicator"
         )
 
+
 class UserLocators:
     def __init__(self, page: Page):
         self._page = page

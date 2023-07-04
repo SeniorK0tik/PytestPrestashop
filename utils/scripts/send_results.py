@@ -11,17 +11,10 @@ def send_to_allure():
     allure_server = config.allure.url
     # Project ID according to existent projects in your Allure container - Check endpoint for project creation >> `[POST]/projects`
     project_id = config.allure.project_id
-    # project_id = 'my-project-id'
-
-    # current_directory = pathlib.Path(__file__).parent.parent
-    #
-    # # current_directory = os.path.dirname(os.path.realpath(__file__))
-    # results_directory = root_dir.joinpath(allure_results_directory)
-    print('RESULTS DIRECTORY PATH: ', allure_results_directory)
-
+    logger.info('RESULTS DIRECTORY PATH: {}'.format(allure_results_directory))
     files = os.listdir(allure_results_directory)
 
-    print('FILES:')
+    logger.info('FILES:')
     results = []
     for file in files:
         result = {}
@@ -68,7 +61,6 @@ def send_to_allure():
     logger.info("------------------SUCCESS------------------")
 
     # If you want to generate reports on demand use the endpoint `GET /generate-report` and disable the Automatic Execution >> `CHECK_RESULTS_EVERY_SECONDS: NONE`
-    # """
     logger.info("------------------GENERATE-REPORT------------------")
     execution_name = 'prestashop test'
     execution_from = 'http://localhost.com'
@@ -79,4 +71,3 @@ def send_to_allure():
     json_prettier_response_body = json.dumps(json_response_body, indent=4, sort_keys=True)
     logger.info(json_prettier_response_body)
     logger.info('ALLURE REPORT URL: {}'.format(json.loads(response.content)['data']['report_url']))
-    # """
